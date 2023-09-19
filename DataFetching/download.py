@@ -11,7 +11,18 @@ def initializeSymbol(symbol):
     process_download(dpath)
 
 def initializeSymbols(symbolList):
-    catalystBase = Path.cwd().parent.parent.joinpath("Data")
+    env_value = os.environ.get('DATA_WAREHOUSE')
+    if not env_value:
+        default_value = "DATA_WAREHOUSE"
+        prompt = f"The environment variable is not set.\nDo you want to use the default '{default_value}'? (yes/no): "
+        confirmation = input(prompt).strip().lower()
+        if confirmation == 'yes' or confirmation == 'y':
+            catalystBase = Path(os.path.join('home',' Data'))
+        else:
+            print('Exitting download job.')
+            return
+    else:
+        catalystBase = Path(env_value)
     mdSymbolList = []
     if catalystBase.joinpath("metadata.json").is_file() and os.path.getsize(catalystBase.joinpath("metadata.json")) != 0:
         print("Metadata Found. Performing Efficient Downloads.")
