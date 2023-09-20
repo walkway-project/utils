@@ -40,5 +40,5 @@ def initializeSymbols(symbolList):
 
 
 if __name__ == "__main__":
-    initializeSymbols(["XRPUSDT"])
-
+    tickers = ["BTCUSDT", "ETHUSDT", "LTCUSDT", "DOGEUSDT", "MATICUSDT", "BNBUSDT", "XRPUSDT", "DOTUSDT", "SOLUSDT"]
+    initializeSymbols(tickers)
