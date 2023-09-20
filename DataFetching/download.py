@@ -19,6 +19,13 @@ def initializeSymbols(symbolList):
         default_value = "DATA_WAREHOUSE"
         warnings.warn("No data warehouse environ detected, using default.", PathWarning)
         catalystBase = Path.cwd().parent.parent.joinpath("Data")
+        prompt = f"The environment variable is not set.\n Do you want to use the default '{default_value}'? (y/n): "
+        confirmation = input(prompt).strip().lower()
+        if confirmation == 'yes' or confirmation == 'y':
+            catalystBase = Path(os.path.join('home',' Data'))
+        else:
+            print('Exiting download job.')
+            return
     else:
         catalystBase = Path(env_value)
     mdSymbolList = []
