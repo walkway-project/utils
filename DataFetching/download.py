@@ -4,7 +4,10 @@ from pathlib import Path
 from helpers.parser import process_download 
 from metadata.metadata import write_metadata, read_metadata 
 from metadata.mdtimeframe import TimeFrame
+import warnings
 
+class PathWarning(UserWarning): pass
+    
 def initializeSymbol(symbol, catalystBase):
     print(f"Starting Processing for {symbol}")
     dpath = download(symbol, catalystBase)
@@ -14,13 +17,8 @@ def initializeSymbols(symbolList):
     env_value = os.environ.get('DATA_WAREHOUSE')
     if not env_value:
         default_value = "DATA_WAREHOUSE"
-        prompt = f"The environment variable is not set.\n Do you want to use the default '{default_value}'? (y/n): "
-        confirmation = input(prompt).strip().lower()
-        if confirmation == 'yes' or confirmation == 'y':
-            catalystBase = Path(os.path.join('home',' Data'))
-        else:
-            print('Exiting download job.')
-            return
+        warnings.warn("No data warehouse environ detected, using default.", PathWarning)
+        catalystBase = Path(os.path.join('/home', 'Data'))
     else:
         catalystBase = Path(env_value)
     mdSymbolList = []
