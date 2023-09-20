@@ -5,21 +5,21 @@ from helpers.parser import process_download
 from metadata.metadata import write_metadata, read_metadata 
 from metadata.mdtimeframe import TimeFrame
 
-def initializeSymbol(symbol):
+def initializeSymbol(symbol, catalystBase):
     print(f"Starting Processing for {symbol}")
-    dpath = download(symbol)
-    process_download(dpath)
+    dpath = download(symbol, catalystBase)
+    process_download(dpath, catalystBase)
 
 def initializeSymbols(symbolList):
     env_value = os.environ.get('DATA_WAREHOUSE')
     if not env_value:
         default_value = "DATA_WAREHOUSE"
-        prompt = f"The environment variable is not set.\nDo you want to use the default '{default_value}'? (yes/no): "
+        prompt = f"The environment variable is not set.\n Do you want to use the default '{default_value}'? (y/n): "
         confirmation = input(prompt).strip().lower()
         if confirmation == 'yes' or confirmation == 'y':
             catalystBase = Path(os.path.join('home',' Data'))
         else:
-            print('Exitting download job.')
+            print('Exiting download job.')
             return
     else:
         catalystBase = Path(env_value)
@@ -33,7 +33,7 @@ def initializeSymbols(symbolList):
         print("No Metadata Found. Falling back to naive download.")
     for symbol in symbolList:
         if symbol not in mdSymbolList:
-            initializeSymbol(symbol)
+            initializeSymbol(symbol, catalystBase)
     print("Writing Metadata")
     write_metadata("data", catalystBase, symbolList, TimeFrame.SHORT)
     print("Downloads Complete!")
