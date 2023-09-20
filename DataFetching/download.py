@@ -5,12 +5,12 @@ from helpers.parser import process_download
 from metadata.metadata import write_metadata, read_metadata 
 from metadata.mdtimeframe import TimeFrame
 
-def initializeSymbol(symbol, catalystBase):
+def initializeSymbol(symbol, catalystBase, timeframe):
     print(f"Starting Processing for {symbol}")
-    dpath = download(symbol, catalystBase)
+    dpath = download(symbol, catalystBase, timeframe)
     process_download(dpath, catalystBase)
 
-def initializeSymbols(symbolList):
+def initializeSymbols(symbolList, timeframe):
     env_value = os.environ.get('DATA_WAREHOUSE')
     if not env_value:
         default_value = "DATA_WAREHOUSE"
@@ -33,12 +33,12 @@ def initializeSymbols(symbolList):
         print("No Metadata Found. Falling back to naive download.")
     for symbol in symbolList:
         if symbol not in mdSymbolList:
-            initializeSymbol(symbol, catalystBase)
+            initializeSymbol(symbol, catalystBase, timeframe)
     print("Writing Metadata")
     write_metadata("data", catalystBase, symbolList, TimeFrame.SHORT)
     print("Downloads Complete!")
 
 
 if __name__ == "__main__":
-    initializeSymbols(["XRPUSDT"])
+    initializeSymbols(["XRPUSDT"], TimeFrame.TEST)
 

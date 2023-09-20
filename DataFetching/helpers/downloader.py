@@ -6,7 +6,20 @@ import nest_asyncio
 import shutil
 import os
 
-def download(symbol, catalystBase):
+start_dates = {
+        -1 : "2023-07-01",
+        1 : "2022-01-01",
+        2 : "2021-01-01",
+        3 : "2020-01-01",
+        }
+end_dates = {
+        -1 : "2023-08-01",
+        1 : "2023-07-01",
+        2 : "2023-07-01",
+        3 : "2023-07-01",
+        }
+
+def download(symbol, catalystBase, timeframe):
     nest_asyncio.apply()
     SYMBOL = symbol
     datasets.download(
@@ -16,8 +29,8 @@ def download(symbol, catalystBase):
             "trades",
             "book_snapshot_25",
         ],
-        from_date="2023-06-01",
-        to_date="2023-07-01",
+        from_date=start_date,
+        to_date=end_date,
         symbols=[SYMBOL],
         concurrency=os.cpu_count()/2, #beta af man 
         api_key="",
