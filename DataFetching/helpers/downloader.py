@@ -6,7 +6,7 @@ import nest_asyncio
 import shutil
 import os
 
-def download(symbol):
+def download(symbol, catalystBase):
     nest_asyncio.apply()
     SYMBOL = symbol
     datasets.download(
@@ -22,7 +22,6 @@ def download(symbol):
         concurrency=os.cpu_count()/2, #beta af man 
         api_key="",
     )
-    catalystBase = Path.cwd().parent.parent.joinpath("Data")
     targetPath = catalystBase.joinpath(SYMBOL[0:(len(SYMBOL)-4)]+"-SPOT")
     try:
         os.rename(Path.cwd().joinpath("datasets"), targetPath)

@@ -92,8 +92,7 @@ def parse_trades(source, tradesFile, stop_at=None):
             f"{content['product_id']}|{content['side']}|{content['time']}|{content['price']}|{content['size']}|{content['trade_id']}\n"
         )
 
-def process_download(symbol):
-    catalystBase = Path.cwd().parent.parent.joinpath("Data") 
+def process_download(symbol, catalystBase):
     base = catalystBase
     all_entries = os.listdir(catalystBase)
     directories = [symbol]
