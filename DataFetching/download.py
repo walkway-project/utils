@@ -18,7 +18,7 @@ def initializeSymbols(symbolList):
     if not env_value:
         default_value = "DATA_WAREHOUSE"
         warnings.warn("No data warehouse environ detected, using default.", PathWarning)
-        catalystBase = Path(os.path.join('/home', 'Data'))
+        catalystBase = Path.cwd().parent.parent.joinpath("Data")
     else:
         catalystBase = Path(env_value)
     mdSymbolList = []
