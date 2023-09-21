@@ -16,16 +16,8 @@ def initializeSymbol(symbol, catalystBase):
 def initializeSymbols(symbolList):
     env_value = os.environ.get('DATA_WAREHOUSE')
     if not env_value:
-        default_value = "DATA_WAREHOUSE"
-        warnings.warn("No data warehouse environ detected, using default.", PathWarning)
         catalystBase = Path.cwd().parent.parent.joinpath("Data")
-        prompt = f"The environment variable is not set.\n Do you want to use the default '{default_value}'? (y/n): "
-        confirmation = input(prompt).strip().lower()
-        if confirmation == 'yes' or confirmation == 'y':
-            catalystBase = Path(os.path.join('home',' Data'))
-        else:
-            print('Exiting download job.')
-            return
+        print(f"No $DATA_WAREHOUSE found, using default {catalystBase}.")
     else:
         catalystBase = Path(env_value)
     mdSymbolList = []
