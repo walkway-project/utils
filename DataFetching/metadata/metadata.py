@@ -2,7 +2,7 @@ import orjson as json
 from metadata.mdtimeframe import TimeFrame
 from pathlib import Path
 
-def write_metadata(mdtype, directory, symbols, timeframe):
+def write_metadata(mdtype, directory, symbols, timeframe, features = {}):
     if mdtype == "data":
         data = {}
         data["type"] = "data";
