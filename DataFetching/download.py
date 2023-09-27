@@ -28,14 +28,13 @@ def initializeSymbols(symbolList):
         md = metadataGenerator.read_metadata(catalystBase, "data")
         mdSymbolList = md.get("symbols", [])
         mdTimeframe = md.get("timeframe", -99)
-        #lol theres missing logic here uhhhhhhhhhhh
     else:
         print("No Metadata Found. Falling back to naive download.")
     for symbol in symbolList:
         if symbol not in mdSymbolList:
             initializeSymbol(symbol, catalystBase)
     print("Writing Metadata")
-    metadataGenerator.generate_download_metadata(symbolList, TimeFrame.SHORT)
+    metadataGenerator.generate_download_metadata(symbolList, TimeFrame.TEST)
     metadataGenerator.author_metadata(catalystBase)
     print("Downloads Complete!")
 

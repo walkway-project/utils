@@ -51,7 +51,7 @@ class MetadataGenerator:
         """
         if (type not in self.metadata.keys() and type != "all"):
             raise Exception("Metadata type is not supported!")
-        with open(directory.joinpath("metadata.json"), "r") as json_file:
+        with open(path.joinpath("metadata.json"), "r") as json_file:
             data = json_file.read()
         mdDict = json.loads(data)
         if (type == "all"):
@@ -64,8 +64,8 @@ class MetadataGenerator:
         """
         Stores the current metadata into the path/metadata.json.
         """
-        with open(path.joinpath("metadata.json"), "r") as jsonfile:
-            jsonfile.write(self.data)
+        with open(path.joinpath("metadata.json"), "a") as jsonfile:
+            jsonfile.write(json.dumps(self.metadata).decode("utf-8"))
 
 
 
