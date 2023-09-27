@@ -59,3 +59,13 @@ class MetadataGenerator:
         else:
             return mdDict[type]
 
+
+    def author_metadata(self, path):
+        """
+        Stores the current metadata into the path/metadata.json.
+        """
+        with open(path.joinpath("metadata.json"), "r") as jsonfile:
+            jsonfile.write(self.data)
+
+
+
