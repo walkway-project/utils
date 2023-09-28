@@ -2,12 +2,14 @@ from helpers.downloader import download
 import os
 from pathlib import Path
 from helpers.parser import process_download 
-from metadata.metadata import write_metadata, read_metadata 
+from metadata.metadata import MetadataGenerator
 from metadata.mdtimeframe import TimeFrame
 import warnings
 
 class PathWarning(UserWarning): pass
-    
+
+metadataGenerator = MetadataGenerator()
+
 def initializeSymbol(symbol, catalystBase):
     print(f"Starting Processing for {symbol}")
     dpath = download(symbol, catalystBase)
@@ -23,7 +25,7 @@ def initializeSymbols(symbolList):
     mdSymbolList = []
     if catalystBase.joinpath("metadata.json").is_file() and os.path.getsize(catalystBase.joinpath("metadata.json")) != 0:
         print("Metadata Found. Performing Efficient Downloads.")
-        md = read_metadata("data", catalystBase)
+        md = metadataGenerator.read_metadata(catalystBase, "data")
         mdSymbolList = md.get("symbols", [])
         mdTimeframe = md.get("timeframe", -99)
     else:
@@ -32,7 +34,8 @@ def initializeSymbols(symbolList):
         if symbol not in mdSymbolList:
             initializeSymbol(symbol, catalystBase)
     print("Writing Metadata")
-    write_metadata("data", catalystBase, symbolList, TimeFrame.SHORT)
+    metadataGenerator.generate_download_metadata(symbolList, TimeFrame.TEST)
+    metadataGenerator.author_metadata(catalystBase)
     print("Downloads Complete!")
 
 
