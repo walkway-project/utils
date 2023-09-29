@@ -5,8 +5,17 @@ from pathlib import Path
 import nest_asyncio
 import shutil
 import os
+from metadata.mdtimeframe import TimeFrame
 
-def download(symbol, catalystBase):
+TIMEFRAME_MAP = {
+    TimeFrame.TEST : ["2023-06-01","2023-07-01"],
+    TimeFrame.SHORT : ["2022-01-01", "2023-07-01"],
+    TimeFrame.MED : ["2021-01-01", "2023-07-01"],
+    TimeFrame.LONG : ["2020-01-01", "2023-07-01"]
+}
+
+def download(symbol, catalystBase, timeFrame):
+    start, end = TIMEFRAME_MAP[timeFrame]
     nest_asyncio.apply()
     SYMBOL = symbol
     datasets.download(
@@ -16,8 +25,8 @@ def download(symbol, catalystBase):
             "trades",
             "book_snapshot_25",
         ],
-        from_date="2023-06-01",
-        to_date="2023-07-01",
+        from_date=start,
+        to_date=end,
         symbols=[SYMBOL],
         concurrency=os.cpu_count()/2, #beta af man 
         api_key="",
