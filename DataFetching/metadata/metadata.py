@@ -32,8 +32,6 @@ class MetadataGenerator:
         self.metadata[self.TIMEFRAME_KEY] = timeframe
         self.downloaded = True
 
-
-
     def generate_feature_metadata(self, features:set):
         """
         Stores metadata for all features and their timeframes for symbols.
@@ -52,21 +50,22 @@ class MetadataGenerator:
 
     def read_metadata(self, path, callback = False):
         """
-        Extracts metadata from Path. You can supply spcific types or "all".
+        Extracts metadata from Path/metadata.json.
         """
         with open(path.joinpath("metadata.json"), "r") as json_file:
             data = json_file.read()
         mdDict = json.loads(data)
+        self.metadata = mdDict
+        self.symbols = set(self.metadata[self.SYMBOL_KEY])
         if callback:
             return mdDict
-        else:
-            self.metadata = mdDict
 
 
     def author_metadata(self, path):
         """
         Stores the current metadata into the path/metadata.json.
         """
+        self.metadata[self.FEATURE_KEY] = list(self.features)
         with open(path.joinpath("metadata.json"), "a") as jsonfile:
             jsonfile.write(json.dumps(self.metadata).decode("utf-8"))
 
