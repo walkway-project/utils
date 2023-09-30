@@ -19,7 +19,7 @@ def initializeSymbols(symbolList):
     env_value = os.environ.get('DATA_WAREHOUSE')
     if not env_value:
         catalystBase = Path.cwd().parent.parent.joinpath("Data")
-        print(f"No $DATA_WAREHOUSE found, using default {catalystBase}.")
+        warnings.warn("No $DATA_WAREHOUSE found, using default {catalystBase}.", PathWarning)
     else:
         catalystBase = Path(env_value)
     mdSymbolList = []
@@ -27,7 +27,7 @@ def initializeSymbols(symbolList):
         print("Metadata Found. Performing Efficient Downloads.")
         md = metadataGenerator.read_metadata(catalystBase, "data")
         mdSymbolList = md.get("symbols", [])
-        mdTimeframe = md.get("timeframe", -99)
+        mdTimeframe = md.get("timeframe", -1)
     else:
         print("No Metadata Found. Falling back to naive download.")
     for symbol in symbolList:
@@ -40,5 +40,5 @@ def initializeSymbols(symbolList):
 
 
 if __name__ == "__main__":
-    tickers = ["BTCUSDT", "ETHUSDT", "LTCUSDT", "DOGEUSDT", "MATICUSDT", "BNBUSDT", "XRPUSDT", "DOTUSDT", "SOLUSDT"]
+    tickers = ["BTCUSDT"]
     initializeSymbols(tickers)
