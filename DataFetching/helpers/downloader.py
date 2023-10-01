@@ -8,10 +8,10 @@ import os
 from metadata.mdtimeframe import TimeFrame
 
 TIMEFRAME_MAP = {
-    TimeFrame.TEST : ["2023-06-01","2023-07-01"],
-    TimeFrame.SHORT : ["2022-01-01", "2023-07-01"],
-    TimeFrame.MED : ["2021-01-01", "2023-07-01"],
-    TimeFrame.LONG : ["2020-01-01", "2023-07-01"]
+    TimeFrame.TEST : ["2023-05-31","2023-07-01"],
+    TimeFrame.SHORT : ["2021-12-31", "2023-07-01"],
+    TimeFrame.MED : ["2020-12-31", "2023-07-01"],
+    TimeFrame.LONG : ["2019-12-31", "2023-07-01"]
 }
 
 def download(symbol, catalystBase, timeFrame):
