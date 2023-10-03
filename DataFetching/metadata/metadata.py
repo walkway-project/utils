@@ -1,6 +1,7 @@
 import orjson as json
 from metadata.mdtimeframe import TimeFrame
 from pathlib import Path
+import shutil
 
 class MetadataGenerator:
 
@@ -8,7 +9,7 @@ class MetadataGenerator:
         self.metadata = {} #schema: type -> dict containing specific data
         self.features = set() 
         self.symbols = set() 
-
+        self.path = ""
 
         self.FEATURE_KEY = "features"
         self.SYMBOL_KEY = "symbols"
@@ -52,6 +53,7 @@ class MetadataGenerator:
         """
         Extracts metadata from Path/metadata.json.
         """
+        self.path = path
         with open(path.joinpath("metadata.json"), "r") as json_file:
             data = json_file.read()
         mdDict = json.loads(data)
@@ -65,9 +67,23 @@ class MetadataGenerator:
         """
         Stores the current metadata into the path/metadata.json.
         """
+        self.path = path.joinpath("metadata.json")
         self.metadata[self.FEATURE_KEY] = list(self.features)
-        with open(path.joinpath("metadata.json"), "a") as jsonfile:
+        with open(self.path, "a") as jsonfile:
             jsonfile.write(json.dumps(self.metadata).decode("utf-8"))
+
+    def delete_metadata(self, path = ""):
+        """
+        Deletes the metadata in the current path, defaults to the cached path. Not intended to be used by end users.
+        """
+        if not self.path and not path:
+            raise Exception("No path stored or found for deletion")
+        elif self.path: 
+            print(f"Deleting metadata stored in {self.path}")
+            shutil.rmtree(self.path)
+        else: #does not point at md
+            path = path.joinpath("metadata.json")
+            shutil.rmtree(path)
 
 
 
