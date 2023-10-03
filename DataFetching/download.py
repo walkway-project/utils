@@ -58,7 +58,7 @@ def initializeSymbols(symbolList, timeFrame):
 
     if delta: #if we have md but need to add a symbol: remove old md, write new.
         print("Writing Metadata")
-        shutil.rmtree(catalystBase.joinpath("metadata.json"))
+        metadataGenerator.delete_metadata()
         metadataGenerator.author_metadata(catalystBase)
     print("Downloads Complete!")
 
