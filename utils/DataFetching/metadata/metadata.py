@@ -1,6 +1,5 @@
 import orjson as json
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
-from pathlib import Path
 import shutil
 
 class MetadataGenerator:
@@ -14,8 +13,9 @@ class MetadataGenerator:
         self.FEATURE_KEY = "features"
         self.SYMBOL_KEY = "symbols"
         self.TIMEFRAME_KEY = "timeframe"
-        self.OHLCV_FNAME = "ohlcv"
-        self.ORDERBOOK_FNAME = "orderbook"
+        self.ORDERBOOK_FNAME = "ob_snapshot_50"
+        self.TRADES_FNAME = "trades"
+        self.UPDATES_FNAME = "l2_updates"
 
         self.downloaded = False
 
@@ -28,7 +28,7 @@ class MetadataGenerator:
         if self.downloaded:
             raise Exception("Can only generate download metadata once!")
         self.symbols = set(symbols)
-        self.features = set([self.OHLCV_FNAME, self.ORDERBOOK_FNAME])
+        self.features = set([self.TRADES_FNAME, self.ORDERBOOK_FNAME, self.UPDATES_FNAME])
         self.metadata[self.SYMBOL_KEY] = symbols
         self.metadata[self.TIMEFRAME_KEY] = timeframe
         self.downloaded = True

@@ -36,7 +36,7 @@ def initializeSymbols(symbolList, timeFrame):
         print(f"No $DATA_WAREHOUSE found, using default {catalystBase}.")
     else:
         catalystBase = Path(env_value)
-
+    if not os.path.exists(catalystBase) : os.makedirs(catalystBase)
     if catalystBase.joinpath("metadata.json").is_file() and os.path.getsize(catalystBase.joinpath("metadata.json")) != 0: #md exists
         print("Metadata Found.")
         metadataGenerator.read_metadata(catalystBase)
