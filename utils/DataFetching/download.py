@@ -34,7 +34,7 @@ def initializeSymbols(symbolList, timeFrame):
 
     env_value = os.environ.get('DATA_WAREHOUSE')
     if not env_value:
-        catalystBase = Path.cwd().parent.parent.joinpath("Data")
+        catalystBase = Path.cwd().parent.parent.parent.joinpath("Data")
         print(f"No $DATA_WAREHOUSE found, using default {catalystBase}.")
     else:
         catalystBase = Path(env_value)
