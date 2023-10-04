@@ -3,7 +3,6 @@ import shutil
 from pathlib import Path
 import os
 import shutil
-from tqdm import tqdm
 
 def extract_string(input_string):
     ftype = "snapshots"
@@ -22,7 +21,7 @@ def parse_udpates(source, updatesFile, stop_at=None):
     i = 0
     updatesFile.write("pair|side|time|price|volume\n")
     next(source)  # skip header
-    for line in tqdm(source):
+    for line in source:
         i += 1
         if stop_at and i > stop_at:
             break
@@ -45,7 +44,7 @@ def parse_snapshots(source, snapshotsFile, stop_at=None):
     i = 0
     snapshotsFile.write("pair|time|bids|asks\n")
     next(source)  # skip header
-    for line in tqdm(source):
+    for line in source:
         contents = line.decode("utf-8").rstrip("\n").split(",")
         if contents == [""]:
             continue
@@ -71,9 +70,8 @@ def parse_snapshots(source, snapshotsFile, stop_at=None):
 def parse_trades(source, tradesFile, stop_at=None):
     i = 0
     next(source)  # skip header
-    # print(f"total lines: {sum(1 for line in source)}")
     tradesFile.write("pair|side|time|price|volume|trade_id\n")
-    for line in tqdm(source):
+    for line in source:
         i += 1
         if stop_at and i > stop_at:
             break
@@ -103,7 +101,8 @@ def process_download(symbol, catalystBase):
         files = sorted([f for f in files if f.endswith(".gz")])
         for f in files:
             ftype, time, pair = extract_string(f)
-            target_dir = str(base / pair / ftype)
+            target_dir = str(base / pair / ftype)
+
             if not os.path.exists(target_dir):
                 os.makedirs(target_dir)
             targetfile = target_dir + "/" + time + ".csv"

@@ -1,11 +1,10 @@
-# pip install tardis-dev
-# requires Python >=3.6
 from tardis_dev import datasets
 from pathlib import Path
 import nest_asyncio
 import shutil
 import os
-from metadata.mdtimeframe import TimeFrame
+
+from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 
 TIMEFRAME_MAP = {
     TimeFrame.TEST : ["2023-06-01","2023-07-01"],
@@ -39,7 +38,3 @@ def download(symbol, catalystBase, timeFrame):
         pass
     print(f"Finished downloading for {symbol}.")
     return targetPath
-
-
-if __name__ == "__main__":
-    download("XRPUSDT")

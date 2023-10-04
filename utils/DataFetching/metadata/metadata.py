@@ -1,5 +1,5 @@
 import orjson as json
-from metadata.mdtimeframe import TimeFrame
+from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 from pathlib import Path
 import shutil
 

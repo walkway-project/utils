@@ -1,11 +1,9 @@
-from helpers.downloader import download 
+from catalyst.utils.utils.DataFetching.helpers.downloader import download 
 import os
 from pathlib import Path
-from helpers.parser import process_download 
-from metadata.metadata import MetadataGenerator
-from metadata.mdtimeframe import TimeFrame
-import warnings
-import shutil
+from catalyst.utils.utils.DataFetching.helpers.parser import process_download 
+from catalyst.utils.utils.DataFetching.metadata.metadata import MetadataGenerator
+from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 
 class PathWarning(UserWarning): pass
 
