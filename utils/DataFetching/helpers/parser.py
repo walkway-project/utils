@@ -1,9 +1,6 @@
 import gzip
-import shutil
-from pathlib import Path
 import os
 import shutil
-from tqdm import tqdm
 
 def extract_string(input_string):
     ftype = "snapshots"
@@ -17,12 +14,17 @@ def extract_string(input_string):
     substring = substring[-1]
     return ftype, time, substring
 
+ftype_features = {
+    "snapshots" : "ob_snapshot_50",
+    "trades" : "trades",
+    "updates" : "l2_updates" 
+}
 
-def parse_udpates(source, updatesFile, stop_at=None):
+def parse_updates(source, updatesFile, stop_at=None):
     i = 0
     updatesFile.write("pair|side|time|price|volume\n")
     next(source)  # skip header
-    for line in tqdm(source):
+    for line in source:
         i += 1
         if stop_at and i > stop_at:
             break
@@ -45,7 +47,7 @@ def parse_snapshots(source, snapshotsFile, stop_at=None):
     i = 0
     snapshotsFile.write("pair|time|bids|asks\n")
     next(source)  # skip header
-    for line in tqdm(source):
+    for line in source:
         contents = line.decode("utf-8").rstrip("\n").split(",")
         if contents == [""]:
             continue
@@ -71,9 +73,8 @@ def parse_snapshots(source, snapshotsFile, stop_at=None):
 def parse_trades(source, tradesFile, stop_at=None):
     i = 0
     next(source)  # skip header
-    # print(f"total lines: {sum(1 for line in source)}")
     tradesFile.write("pair|side|time|price|volume|trade_id\n")
-    for line in tqdm(source):
+    for line in source:
         i += 1
         if stop_at and i > stop_at:
             break
@@ -94,16 +95,15 @@ def parse_trades(source, tradesFile, stop_at=None):
 
 def process_download(symbol, catalystBase):
     base = catalystBase
-    all_entries = os.listdir(catalystBase)
     directories = [symbol]
     directories = [str(base / entry) for entry in directories]
     snapcount = 0
     for pair_dir in directories:
         files = os.listdir(pair_dir)
         files = sorted([f for f in files if f.endswith(".gz")])
-        for f in files:
+        for f in files: #for source gzip file
             ftype, time, pair = extract_string(f)
-            target_dir = str(base / pair / ftype)
+            target_dir = str(base / ftype_features[ftype] / pair) #this is where it is going:
             if not os.path.exists(target_dir):
                 os.makedirs(target_dir)
             targetfile = target_dir + "/" + time + ".csv"
@@ -111,7 +111,7 @@ def process_download(symbol, catalystBase):
                 with open(targetfile, "w+") as f_out:
                     try:
                         if ftype == "updates":
-                            parse_udpates(f_in, f_out)
+                            parse_updates(f_in, f_out)
                         elif ftype == "trades":
                             parse_trades(f_in, f_out)
                         else:
