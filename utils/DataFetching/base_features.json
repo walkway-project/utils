@@ -1,0 +1,7 @@
+{
+    "features": [
+        "ob_snapshot_50",
+        "trades",
+        "l2_updates"
+    ]
+}
