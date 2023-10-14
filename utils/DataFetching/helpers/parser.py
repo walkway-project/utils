@@ -59,9 +59,9 @@ def parse_snapshots(source, snapshotsFile, stop_at=None):
         content["asks"] = []
         for i in range(0, len(contents), 2):
             if i % 4 == 0:
-                content["bids"].append([float(contents[i]), float(contents[i + 1])])
-            else:
                 content["asks"].append([float(contents[i]), float(contents[i + 1])])
+            else:
+                content["bids"].append([float(contents[i]), float(contents[i + 1])])
         snapshotsFile.write(
             f"{content['pair']}|{content['time']}|{content['bids']}|{content['asks']}\n"
         )
