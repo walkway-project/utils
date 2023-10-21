@@ -22,7 +22,7 @@ ftype_features = {
 
 def parse_updates(source, updatesFile, stop_at=None):
     i = 0
-    updatesFile.write("pair|side|time|price|volume\n")
+    updatesFile.write("pair|side|time|price|volume|is_snapshot\n")
     next(source)  # skip header
     for line in source:
         i += 1
@@ -37,9 +37,10 @@ def parse_updates(source, updatesFile, stop_at=None):
             "time": contents[2],
             "price": contents[6],
             "size": contents[7],
+            "is_snapshot":contents[4],
         }
         updatesFile.write(
-            f"{content['product_id']}|{content['side']}|{content['time']}|{content['price']}|{content['size']}\n"
+            f"{content['product_id']}|{content['side']}|{content['time']}|{content['price']}|{content['size']}|{content['is_snapshot']}\n"
         )
 
 
