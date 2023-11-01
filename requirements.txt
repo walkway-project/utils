@@ -1,0 +1,8 @@
+tardis-dev>=2.0.0a13
+nest-asyncio>=1.5.8
+requests>=2.31.0
+polars>=0.19.3
+pyarmor>=8.3.11
+tqdm>=4.66.1
+sortedcontainers>=2.4.0
+numpy>=1.26.0
