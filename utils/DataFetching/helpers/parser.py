@@ -119,7 +119,7 @@ def process_download(symbol, catalystBase):
                             if snapcount == 0:
                                 # NOTE: put stop at to 1 to parse the first snapshot only
                                 parse_snapshots(f_in, f_out, stop_at=None)
-                                snapcount += 1
+                                # snapcount += 1
                     except Exception as e:
                         print(f"Error parsing {pair_dir}/{f}")
                         print(e)

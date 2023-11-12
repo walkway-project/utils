@@ -1,6 +1,6 @@
 import orjson as json
+import os
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
-import shutil
 
 class MetadataGenerator:
 
@@ -37,7 +37,8 @@ class MetadataGenerator:
         """
         Stores metadata for all features and their timeframes for symbols.
         """
-        self.metadata[features] = self.metadatafeatures.union(features)
+        self.metadata[self.FEATURE_KEY] = list(set(self.metadata[self.FEATURE_KEY]).union(features))
+        self.features = self.metadata[self.FEATURE_KEY]
 
     def set_metadata(self, metadata):
         """
@@ -58,6 +59,7 @@ class MetadataGenerator:
             data = json_file.read()
         mdDict = json.loads(data)
         self.metadata = mdDict
+        self.features = mdDict[self.FEATURE_KEY]
         self.symbols = set(self.metadata[self.SYMBOL_KEY])
         if callback:
             return mdDict
@@ -80,10 +82,17 @@ class MetadataGenerator:
             raise Exception("No path stored or found for deletion")
         elif self.path: 
             print(f"Deleting metadata stored in {self.path}")
-            shutil.rmtree(self.path)
+            os.remove(self.path.joinpath("metadata.json"))
         else: #does not point at md
             path = path.joinpath("metadata.json")
-            shutil.rmtree(path)
+            os.remove(path)
+
+    def overwrite_metadata(self, path):
+        """
+        Deletes and regenerates the metadata in the given path + "metadata.json".
+        """
+        self.delete_metadata(path.joinpath("metadata.json"))
+        self.author_metadata(path)
 
 
 
