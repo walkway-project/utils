@@ -119,10 +119,7 @@ def process_download(symbol, catalystBase):
                         elif ftype == "trades":
                             parse_trades(f_in, f_out)
                         else:
-                            if snapcount == 0:
-                                # NOTE: put stop at to 1 to parse the first snapshot only
-                                parse_snapshots(f_in, f_out, stop_at=None)
-                                # snapcount += 1
+                            parse_snapshots(f_in, f_out, stop_at=None)
                     except Exception as e:
                         print(f"Error parsing {pair_dir}/{f}")
                         print(e)
