@@ -31,10 +31,7 @@ def download(symbol, catalystBase, timeFrame):
         api_key="",
     )
     targetPath = catalystBase.joinpath(SYMBOL[0:(len(SYMBOL)-4)]+"-SPOT")
-    try:
-        os.rename(Path.cwd().joinpath("datasets"), targetPath)
-        shutil.rmtree(Path.cwd().joinpath("datasets"))
-    except:
-        pass
+    shutil.copytree(Path.cwd().joinpath("datasets"), targetPath)
+    shutil.rmtree(Path.cwd().joinpath("datasets"))
     print(f"Finished downloading for {symbol}.")
     return targetPath

@@ -104,6 +104,9 @@ def process_download(symbol, catalystBase):
         files = sorted([f for f in files if f.endswith(".gz")])
         for f in files: #for source gzip file
             ftype, time, pair = extract_string(f)
+            feature_target = str(base/ftype_features[ftype])
+            if not os.path.exists(feature_target):
+                os.makedirs(feature_target)
             target_dir = str(base / ftype_features[ftype] / pair) #this is where it is going:
             if not os.path.exists(target_dir):
                 os.makedirs(target_dir)
