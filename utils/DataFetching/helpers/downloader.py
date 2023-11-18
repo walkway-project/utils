@@ -1,17 +1,11 @@
 from tardis_dev import datasets
+from catalyst.constants import TIMEFRAME_MAP
 from pathlib import Path
 import nest_asyncio
 import shutil
 import os
 
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
-
-TIMEFRAME_MAP = {
-    TimeFrame.TEST : ["2023-06-01","2023-07-01"],
-    TimeFrame.SHORT : ["2022-01-01", "2023-07-01"],
-    TimeFrame.MED : ["2021-01-01", "2023-07-01"],
-    TimeFrame.LONG : ["2020-01-01", "2023-07-01"]
-}
 
 def download(symbol, catalystBase, timeFrame):
     start, end = TIMEFRAME_MAP[timeFrame]
