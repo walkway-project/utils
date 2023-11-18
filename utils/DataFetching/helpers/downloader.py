@@ -1,5 +1,6 @@
 from tardis_dev import datasets
 from catalyst.constants import TIMEFRAME_MAP
+from catalyst.secrets import TARDIS_SECRET
 from pathlib import Path
 import nest_asyncio
 import shutil
@@ -22,7 +23,7 @@ def download(symbol, catalystBase, timeFrame):
         to_date=end,
         symbols=[SYMBOL],
         concurrency=os.cpu_count()/2, #beta af man 
-        api_key="",
+        api_key=TARDIS_SECRET,
     )
     targetPath = catalystBase.joinpath(SYMBOL[0:(len(SYMBOL)-4)]+"-SPOT")
     shutil.copytree(Path.cwd().joinpath("datasets"), targetPath)
