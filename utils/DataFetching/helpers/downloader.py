@@ -1,5 +1,5 @@
 from tardis_dev import datasets
-from catalyst.constants import TIMEFRAME_MAP
+from catalyst.constants import _DOWNLOAD_TIMEFRAME_MAP as TIMEFRAME_MAP
 from catalyst.secrets import TARDIS_SECRET
 from pathlib import Path
 import nest_asyncio
