@@ -1,9 +1,11 @@
 from catalyst.utils.utils.DataFetching.helpers.downloader import download 
-import os
-from pathlib import Path
 from catalyst.utils.utils.DataFetching.helpers.parser import process_download 
 from catalyst.utils.utils.DataFetching.metadata.metadata import MetadataGenerator
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
+from catalyst.constants import DEFAULTPATH
+
+import os
+from pathlib import Path
 
 class PathWarning(UserWarning): pass
 
@@ -32,7 +34,7 @@ def initializeSymbols(symbolList, timeFrame):
 
     env_value = os.environ.get('DATA_WAREHOUSE')
     if not env_value:
-        catalystBase = Path.cwd().parent.parent.parent.joinpath("Data")
+        catalystBase = DEFAULTPATH
         print(f"No $DATA_WAREHOUSE found, using default {catalystBase}.")
     else:
         catalystBase = Path(env_value)
@@ -63,4 +65,5 @@ def initializeSymbols(symbolList, timeFrame):
 
 if __name__ == "__main__":
     tickers = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT"]
-    initializeSymbols(tickers, TimeFrame.MED)
+    tickers = ["XRPUSDT"]
+    initializeSymbols(tickers, TimeFrame.TEST)

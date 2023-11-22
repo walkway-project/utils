@@ -1,6 +1,7 @@
+from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
+
 import orjson as json
 import os
-from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 
 class MetadataGenerator:
 
