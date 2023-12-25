@@ -1,5 +1,5 @@
 from tardis_dev import datasets
-from catalyst.constants import _DOWNLOAD_TIMEFRAME_MAP as TIMEFRAME_MAP
+from catalyst.constants import _DOWNLOAD_TIMEFRAME_MAP
 from catalyst.secrets import TARDIS_SECRET
 from pathlib import Path
 import nest_asyncio
@@ -9,7 +9,7 @@ import os
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 
 def download(symbol, catalystBase, timeFrame):
-    start, end = TIMEFRAME_MAP[timeFrame]
+    start, end = _DOWNLOAD_TIMEFRAME_MAP[timeFrame]
     nest_asyncio.apply()
     SYMBOL = symbol
     datasets.download(
