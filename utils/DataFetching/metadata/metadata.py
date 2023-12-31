@@ -10,6 +10,7 @@ class MetadataGenerator:
         self.features = set() 
         self.symbols = set() 
         self.path = ""
+        self.lookback = 0
 
         self.FEATURE_KEY = "features"
         self.SYMBOL_KEY = "symbols"
@@ -17,6 +18,7 @@ class MetadataGenerator:
         self.ORDERBOOK_FNAME = "ob_snapshot_50"
         self.TRADES_FNAME = "trades"
         self.UPDATES_FNAME = "l2_updates"
+        self.LOOKBACK_KEY = "lookback"
 
         self.downloaded = False
 
@@ -40,6 +42,10 @@ class MetadataGenerator:
         """
         self.metadata[self.FEATURE_KEY] = list(set(self.metadata[self.FEATURE_KEY]).union(features))
         self.features = self.metadata[self.FEATURE_KEY]
+        
+    def set_lookback(self, lookback:int):
+        self.lookback = lookback
+        self.metadata[self.LOOKBACK_KEY] = lookback
 
     def set_metadata(self, metadata):
         """
@@ -61,6 +67,7 @@ class MetadataGenerator:
         mdDict = json.loads(data)
         self.metadata = mdDict
         self.features = mdDict[self.FEATURE_KEY]
+        self.lookback = mdDict[self.LOOKBACK_KEY]
         self.symbols = set(self.metadata[self.SYMBOL_KEY])
         if callback:
             return mdDict
