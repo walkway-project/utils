@@ -34,6 +34,7 @@ class MetadataGenerator:
         self.features = set([self.TRADES_FNAME, self.ORDERBOOK_FNAME, self.UPDATES_FNAME])
         self.metadata[self.SYMBOL_KEY] = symbols
         self.metadata[self.TIMEFRAME_KEY] = timeframe
+        self.set_lookback(-1)
         self.downloaded = True
 
     def generate_feature_metadata(self, features:set):
