@@ -66,4 +66,4 @@ def initializeSymbols(symbolList, timeFrame):
 if __name__ == "__main__":
     tickers = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT"]
     tickers = ["XRPUSDT"]
-    initializeSymbols(tickers, TimeFrame.TEST)
+    initializeSymbols(tickers, TimeFrame.RECENT)
