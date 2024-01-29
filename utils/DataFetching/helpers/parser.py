@@ -1,6 +1,10 @@
 import gzip
 import os
 import shutil
+from itertools import repeat
+
+import concurrent.futures as cf
+import multiprocessing
 
 def extract_string(input_string):
     ftype = "snapshots"
@@ -94,34 +98,39 @@ def parse_trades(source, tradesFile, stop_at=None):
             f"{content['product_id']}|{content['side']}|{content['time']}|{content['price']}|{content['size']}|{content['trade_id']}\n"
         )
 
+def parse_file(f, base, pair_dir):
+    ftype, time, pair = extract_string(f)
+    feature_target = str(base/ftype_features[ftype])
+    os.makedirs(feature_target, exist_ok=True)
+    target_dir = str(base / ftype_features[ftype] / pair) #this is where it is going:
+    os.makedirs(target_dir, exist_ok=True)
+    targetfile = target_dir + "/" + time + ".csv"
+    with gzip.open(pair_dir + "/" + f, "r") as f_in:
+        with open(targetfile, "w+") as f_out:
+            try:
+                if ftype == "updates":
+                    parse_updates(f_in, f_out)
+                elif ftype == "trades":
+                    parse_trades(f_in, f_out)
+                else:
+                    parse_snapshots(f_in, f_out, stop_at=None)
+            except Exception as e:
+                print(f"Error parsing {pair_dir}/{f}")
+                print(e)
+
+
+
 def process_download(symbol, catalystBase):
     base = catalystBase
     directories = [symbol]
+    #TODO: premake all the folders and files lol
     directories = [str(base / entry) for entry in directories]
-    snapcount = 0
     for pair_dir in directories:
         files = os.listdir(pair_dir)
         files = sorted([f for f in files if f.endswith(".gz")])
-        for f in files: #for source gzip file
-            ftype, time, pair = extract_string(f)
-            feature_target = str(base/ftype_features[ftype])
-            if not os.path.exists(feature_target):
-                os.makedirs(feature_target)
-            target_dir = str(base / ftype_features[ftype] / pair) #this is where it is going:
-            if not os.path.exists(target_dir):
-                os.makedirs(target_dir)
-            targetfile = target_dir + "/" + time + ".csv"
-            with gzip.open(pair_dir + "/" + f, "r") as f_in:
-                with open(targetfile, "w+") as f_out:
-                    try:
-                        if ftype == "updates":
-                            parse_updates(f_in, f_out)
-                        elif ftype == "trades":
-                            parse_trades(f_in, f_out)
-                        else:
-                            parse_snapshots(f_in, f_out, stop_at=None)
-                    except Exception as e:
-                        print(f"Error parsing {pair_dir}/{f}")
-                        print(e)
-                        continue
+        print("Launching Parsing Process Pool.")
+        with cf.ProcessPoolExecutor() as executor:
+            results = executor.map(parse_file, files, repeat(base), repeat(pair_dir))
+        # cf.wait(results)
         shutil.rmtree(pair_dir)
+    return
