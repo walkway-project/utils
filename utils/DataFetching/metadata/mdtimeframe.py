@@ -1,4 +1,6 @@
-from enum import Enum
+from enum import Enum, unique
+
+@unique
 class TimeFrame(Enum):
     TEST = -1 #6/1/2023 to 7/1/2023
     RECENT = 0 # 9/1/2023 to 1/15/2024
