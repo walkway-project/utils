@@ -2,7 +2,6 @@ from catalyst.utils.utils.DataFetching.helpers.downloader import download
 from catalyst.utils.utils.DataFetching.helpers.parser import process_download 
 from catalyst.utils.utils.DataFetching.metadata.metadata import MetadataGenerator
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
-from catalyst.grail.grail.modules.PrimitiveFeatureCacher import PrimitiveFeatureCacher
 from catalyst.constants import DEFAULTPATH
 
 import os
@@ -65,6 +64,5 @@ def initializeSymbols(symbolList, timeFrame):
 
 
 if __name__ == "__main__":
-    tickers = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "SOLUSDT", "XRPUSDT"]
-    tickers = ["XRPUSDT"]
-    initializeSymbols(tickers, TimeFrame.TEST)
+    tickers = ["BTCUSDT"]
+    initializeSymbols(tickers, TimeFrame.RECENT)
