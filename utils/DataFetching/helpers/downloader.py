@@ -6,8 +6,6 @@ import nest_asyncio
 import shutil
 import os
 
-from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
-
 def download(symbol, catalystBase, timeFrame):
     start, end = _DOWNLOAD_TIMEFRAME_MAP[timeFrame]
     nest_asyncio.apply()
