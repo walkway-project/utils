@@ -30,7 +30,7 @@ class MsgpackParser:
             self.catalystBase = Path(env_value)
 
 
-    def parse_symbol(self, symbol):
+    def parse_symbol(self, symbol:str):
         #create directories
         os.makedirs(self.catalystBase.joinpath("l2_updates"), exist_ok=True)
         os.makedirs(self.catalystBase.joinpath("trades"), exist_ok=True)
@@ -94,8 +94,6 @@ class MsgpackParser:
             for line in file:
                 contents = line.decode("utf-8").rstrip("\n").split(',')
                 data = {}
-                if not self.trade_start_timestamp:
-                    self.trade_start_timestamp = int(contents[2])
                 data["t"] = int(contents[2])
                 data["b"] = False
                 if (contents[5] == "buy"):
@@ -104,10 +102,10 @@ class MsgpackParser:
                 data["v"] = float(contents[7])
                 data["n"] = 1
                 self.trades.append(copy.deepcopy(data))
-            msgpack.dump(self.trades, open(self.catalystBase.joinpath("trades").joinpath(f"trades{self.update_start_timestamp}.mpk"), "wb+"))
+            msgpack.dump(self.trades, open(self.catalystBase.joinpath("trades").joinpath(f"trades{trade_file.split('.')[0]}.mpk"), "wb+"))
             self.trades.clear()
                     
 
 if __name__ == "__main__":
-    parser = RawParser()
+    parser = MsgpackParser()
     parser.parse_symbol("XRPUSDT")
