@@ -1,5 +1,5 @@
-from catalyst.utils.utils.DataFetching.helpers.downloader import download 
-from catalyst.utils.utils.DataFetching.helpers.parser import process_download 
+from catalyst.utils.utils.DataFetching.helpers.downloader import download
+from catalyst.utils.utils.DataFetching.helpers.parser import process_download
 from catalyst.utils.utils.DataFetching.metadata.metadata import MetadataGenerator
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 from catalyst.constants import DEFAULTPATH
@@ -7,14 +7,19 @@ from catalyst.constants import DEFAULTPATH
 import os
 from pathlib import Path
 
-class PathWarning(UserWarning): pass
+
+class PathWarning(UserWarning):
+    pass
+
 
 metadataGenerator = MetadataGenerator()
+
 
 def initializeSymbol(symbol, catalystBase, timeFrame):
     print(f"Starting Processing for {symbol}")
     dpath = download(symbol, catalystBase, timeFrame)
     process_download(dpath, catalystBase)
+
 
 def fullDownload(symbolList, catalystBase, timeFrame):
     """
@@ -25,6 +30,7 @@ def fullDownload(symbolList, catalystBase, timeFrame):
     metadataGenerator.generate_download_metadata(symbolList, timeFrame)
     metadataGenerator.author_metadata(catalystBase)
 
+
 def initializeSymbols(symbolList, timeFrame):
     """
     Scans symbollist for timeFrame and downloads extra tickers if needed.
@@ -32,17 +38,24 @@ def initializeSymbols(symbolList, timeFrame):
 
     delta = False
 
-    env_value = os.environ.get('DATA_WAREHOUSE')
+    env_value = os.environ.get("DATA_WAREHOUSE")
     if not env_value:
         catalystBase = DEFAULTPATH
         print(f"No $DATA_WAREHOUSE found, using default {catalystBase}.")
     else:
         catalystBase = Path(env_value)
-    if not os.path.exists(catalystBase) : os.makedirs(catalystBase)
-    if catalystBase.joinpath("metadata.json").is_file() and os.path.getsize(catalystBase.joinpath("metadata.json")) != 0: #md exists
+    if not os.path.exists(catalystBase):
+        os.makedirs(catalystBase)
+    if (
+        catalystBase.joinpath("metadata.json").is_file()
+        and os.path.getsize(catalystBase.joinpath("metadata.json")) != 0
+    ):  # md exists
         print("Metadata Found.")
         metadataGenerator.read_metadata(catalystBase)
-        if metadataGenerator.metadata[metadataGenerator.TIMEFRAME_KEY] >= timeFrame.value:
+        if (
+            metadataGenerator.metadata[metadataGenerator.TIMEFRAME_KEY]
+            >= timeFrame.value
+        ):
             print("Timeframe is usable. Performing Optimized Downloads.")
             for symbol in symbolList:
                 if symbol not in metadataGenerator.symbols:
@@ -51,12 +64,16 @@ def initializeSymbols(symbolList, timeFrame):
                     delta = True
         else:
             print("Extending Timeframe. Performing Naive Download.")
-            fullDownload(symbolList=symbolList, catalystBase=catalystBase, timeFrame=timeFrame)
-    else: #metadata does not exist
+            fullDownload(
+                symbolList=symbolList, catalystBase=catalystBase, timeFrame=timeFrame
+            )
+    else:  # metadata does not exist
         print("No Metadata Found. Falling back to naive download.")
-        fullDownload(symbolList=symbolList, catalystBase=catalystBase, timeFrame=timeFrame)
+        fullDownload(
+            symbolList=symbolList, catalystBase=catalystBase, timeFrame=timeFrame
+        )
 
-    if delta: #if we have md but need to add a symbol: remove old md, write new.
+    if delta:  # if we have md but need to add a symbol: remove old md, write new.
         print("Writing Metadata")
         metadataGenerator.delete_metadata()
         metadataGenerator.author_metadata(catalystBase)
@@ -64,5 +81,5 @@ def initializeSymbols(symbolList, timeFrame):
 
 
 if __name__ == "__main__":
-    tickers = ["BTCUSDT"]
-    initializeSymbols(tickers, TimeFrame.RECENT)
+    tickers = ["ETHUSDT"]
+    initializeSymbols(tickers, TimeFrame.TEST)

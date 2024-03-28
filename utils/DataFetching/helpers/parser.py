@@ -6,6 +6,7 @@ from itertools import repeat
 import concurrent.futures as cf
 import multiprocessing
 
+
 def extract_string(input_string):
     ftype = "snapshots"
     if "trades" in input_string:
@@ -18,11 +19,13 @@ def extract_string(input_string):
     substring = substring[-1]
     return ftype, time, substring
 
+
 ftype_features = {
-    "snapshots" : "ob_snapshot_50",
-    "trades" : "trades",
-    "updates" : "l2_updates" 
+    "snapshots": "ob_snapshot_50",
+    "trades": "trades",
+    "updates": "l2_updates",
 }
+
 
 def parse_updates(source, updatesFile, stop_at=None):
     i = 0
@@ -41,7 +44,7 @@ def parse_updates(source, updatesFile, stop_at=None):
             "time": contents[2],
             "price": contents[6],
             "size": contents[7],
-            "is_snapshot":contents[4],
+            "is_snapshot": contents[4],
         }
         updatesFile.write(
             f"{content['product_id']}|{content['side']}|{content['time']}|{content['price']}|{content['size']}|{content['is_snapshot']}\n"
@@ -98,11 +101,12 @@ def parse_trades(source, tradesFile, stop_at=None):
             f"{content['product_id']}|{content['side']}|{content['time']}|{content['price']}|{content['size']}|{content['trade_id']}\n"
         )
 
+
 def parse_file(f, base, pair_dir):
     ftype, time, pair = extract_string(f)
-    feature_target = str(base/ftype_features[ftype])
+    feature_target = str(base / ftype_features[ftype])
     os.makedirs(feature_target, exist_ok=True)
-    target_dir = str(base / ftype_features[ftype] / pair) #this is where it is going:
+    target_dir = str(base / ftype_features[ftype] / pair)  # this is where it is going:
     os.makedirs(target_dir, exist_ok=True)
     targetfile = target_dir + "/" + time + ".csv"
     with gzip.open(pair_dir + "/" + f, "r") as f_in:
@@ -119,11 +123,10 @@ def parse_file(f, base, pair_dir):
                 print(e)
 
 
-
 def process_download(symbol, catalystBase):
     base = catalystBase
     directories = [symbol]
-    #TODO: premake all the folders and files lol
+    # TODO: premake all the folders and files lol
     directories = [str(base / entry) for entry in directories]
     for pair_dir in directories:
         files = os.listdir(pair_dir)

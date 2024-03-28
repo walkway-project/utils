@@ -8,6 +8,7 @@ from pathlib import Path
 import shutil
 import os
 
+
 def download(symbol, catalystBase, timeFrame):
     start, end = _DOWNLOAD_TIMEFRAME_MAP[timeFrame]
     nest_asyncio.apply()
@@ -22,7 +23,7 @@ def download(symbol, catalystBase, timeFrame):
         from_date=start,
         to_date=end,
         symbols=[SYMBOL],
-        concurrency=os.cpu_count()/2, #beta af man 
+        concurrency=os.cpu_count() / 2,  # beta af man
         api_key=TARDIS_SECRET,
     )
     targetPath = catalystBase.joinpath(SYMBOL)
