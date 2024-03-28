@@ -3,12 +3,12 @@ from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 import orjson as json
 import os
 
-class MetadataGenerator:
 
+class MetadataGenerator:
     def __init__(self):
-        self.metadata = {} #schema: type -> dict containing specific data
-        self.features = set() 
-        self.symbols = set() 
+        self.metadata = {}  # schema: type -> dict containing specific data
+        self.features = set()
+        self.symbols = set()
         self.path = ""
         self.lookback = 0
 
@@ -22,29 +22,33 @@ class MetadataGenerator:
 
         self.downloaded = False
 
-    #we are going to count everything as features.
+    # we are going to count everything as features.
 
-    def generate_download_metadata(self, symbols, timeframe:TimeFrame):
+    def generate_download_metadata(self, symbols, timeframe: TimeFrame):
         """
-        ONLY called after downloading. Sets symbols, timeframe, and features. 
+        ONLY called after downloading. Sets symbols, timeframe, and features.
         """
         if self.downloaded:
             raise Exception("Can only generate download metadata once!")
         self.symbols = set(symbols)
-        self.features = set([self.TRADES_FNAME, self.ORDERBOOK_FNAME, self.UPDATES_FNAME])
+        self.features = set(
+            [self.TRADES_FNAME, self.ORDERBOOK_FNAME, self.UPDATES_FNAME]
+        )
         self.metadata[self.SYMBOL_KEY] = symbols
         self.metadata[self.TIMEFRAME_KEY] = timeframe
         self.set_lookback(-1)
         self.downloaded = True
 
-    def generate_feature_metadata(self, features:set):
+    def generate_feature_metadata(self, features: set):
         """
         Stores metadata for all features and their timeframes for symbols.
         """
-        self.metadata[self.FEATURE_KEY] = list(set(self.metadata[self.FEATURE_KEY]).union(features))
+        self.metadata[self.FEATURE_KEY] = list(
+            set(self.metadata[self.FEATURE_KEY]).union(features)
+        )
         self.features = self.metadata[self.FEATURE_KEY]
-        
-    def set_lookback(self, lookback:int):
+
+    def set_lookback(self, lookback: int):
         self.lookback = lookback
         self.metadata[self.LOOKBACK_KEY] = lookback
 
@@ -58,7 +62,7 @@ class MetadataGenerator:
         except:
             raise Exception("Could not parse the provided metadata!")
 
-    def read_metadata(self, path, callback = False):
+    def read_metadata(self, path, callback=False):
         """
         Extracts metadata from Path/metadata.json.
         """
@@ -73,7 +77,6 @@ class MetadataGenerator:
         if callback:
             return mdDict
 
-
     def author_metadata(self, path):
         """
         Stores the current metadata into the path/metadata.json.
@@ -83,16 +86,16 @@ class MetadataGenerator:
         with open(self.path, "a") as jsonfile:
             jsonfile.write(json.dumps(self.metadata).decode("utf-8"))
 
-    def delete_metadata(self, path = ""):
+    def delete_metadata(self, path=""):
         """
         Deletes the metadata in the current path, defaults to the cached path. Not intended to be used by end users.
         """
         if not self.path and not path:
             raise Exception("No path stored or found for deletion")
-        elif self.path: 
+        elif self.path:
             print(f"Deleting metadata stored in {self.path}")
             os.remove(self.path.joinpath("metadata.json"))
-        else: #does not point at md
+        else:  # does not point at md
             path = path.joinpath("metadata.json")
             os.remove(path)
 
@@ -102,6 +105,3 @@ class MetadataGenerator:
         """
         self.delete_metadata(path.joinpath("metadata.json"))
         self.author_metadata(path)
-
-
-
