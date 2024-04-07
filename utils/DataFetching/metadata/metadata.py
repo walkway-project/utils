@@ -84,7 +84,7 @@ class MetadataGenerator:
         self.path = path.joinpath("metadata.json")
         self.metadata[self.FEATURE_KEY] = list(self.features)
         with open(self.path, "a") as jsonfile:
-            jsonfile.write(json.dumps(self.metadata).decode("utf-8"))
+            jsonfile.write(json.dumps(self.metadata, option=json.OPT_APPEND_NEWLINE).decode("utf-8"))
 
     def delete_metadata(self, path=""):
         """
