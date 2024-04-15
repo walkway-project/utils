@@ -55,19 +55,22 @@ class MsgpackParser:
             for line in file:
                 # Data Wrangling
                 contents = line.decode("utf-8").rstrip("\n").split(",")
-                data = {}
-                data["t"] = int(contents[2])
-                data["b"] = False
+                data = []
+                data.append(int(contents[2]))
+                data.append(False)
+                b = False 
                 if contents[5] == "bid":
-                    data["b"] = True
-                data["p"] = float(contents[6])
-                data["v"] = float(contents[7])
+                    b = True
+                data.append(b)
+                data.append(float(contents[6]))
+                data.append(float(contents[7]))
+
                 updates.append(copy.deepcopy(data))
             msgpack.dump(
                 updates,
                 open(
                     self.catalystBase.joinpath("l2_updates").joinpath(
-                        f"{update_file.split('.')[0]}.mpk"
+                        f"{update_file.split('/')[-1].split('.')[0].split('_')[4]}.mpk"
                     ),
                     "wb+",
                 ),
@@ -79,30 +82,28 @@ class MsgpackParser:
             next(file)
             for line in file:
                 contents = line.decode("utf-8").rstrip("\n").split(",")
-                data = {}
-                data["t"] = int(contents[2])
-                data["bp"] = []
-                data["bv"] = []
-                data["ap"] = []
-                data["av"] = []
-                contents = contents[
-                    4:
-                ]  # remove exchange, symbol, timestamp, local timestamp
+                data = []
+                data.append(int(contents[2]))
+                data.append([])
+                data.append([])
+                data.append([])
+                data.append([])
+                contents = contents[4:]  # remove exchange, symbol, timestamp, local timestamp
                 index = 1
                 for i in range(0, len(contents), 2):
                     if i % 4 == 0:
                         index += 1
-                        data["ap"].append(float(contents[i]))
-                        data["av"].append(float(contents[i + 1]))
+                        data[3].append(float(contents[i]))
+                        data[4].append(float(contents[i + 1]))
                     else:
-                        data["bp"].append(float(contents[i]))
-                        data["bv"].append(float(contents[i + 1]))
+                        data[1].append(float(contents[i]))
+                        data[2].append(float(contents[i + 1]))
                 snapshots.append(copy.deepcopy(data))
             msgpack.dump(
                 snapshots,
                 open(
                     self.catalystBase.joinpath("ob_snapshot_50").joinpath(
-                        f"snapshot{snapshot_file.split('.')[0]}.mpk"
+                        f"snapshot{snapshot_file.split('/')[-1].split('.')[0].split('_')[4]}.mpk"
                     ),
                     "wb+",
                 ),
@@ -113,20 +114,21 @@ class MsgpackParser:
             next(file)  # Skip header
             for line in file:
                 contents = line.decode("utf-8").rstrip("\n").split(",")
-                data = {}
-                data["t"] = int(contents[2])
-                data["b"] = False
+                data = []
+                data.append(int(contents[2]))
+                data.append(False)
                 if contents[5] == "buy":
-                    data["b"] = True
-                data["p"] = float(contents[6])
-                data["v"] = float(contents[7])
-                data["n"] = 1
+                    data[-1] = True
+                data.append(float(contents[6]))
+                data.append(float(contents[7]))
+                data.append(1)
                 self.trades.append(copy.deepcopy(data))
+
             msgpack.dump(
                 self.trades,
                 open(
                     self.catalystBase.joinpath("trades").joinpath(
-                        f"trades{trade_file.split('.')[0]}.mpk"
+                        f"trades{trade_file.split('/')[-1].split('.')[0].split('_')[4]}.mpk"
                     ),
                     "wb+",
                 ),
