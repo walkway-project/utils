@@ -27,7 +27,7 @@ def download(symbol:str, catalystBase:Path, timeFrame:TimeFrame, market:Market):
         concurrency=5,
         api_key=DATAKEYS[market],
     )
-    targetPath = catalystBase.joinpath(SYMBOL)
+    targetPath = catalystBase.joinpath(MARKET_MAP[market]).joinpath(SYMBOL)
     shutil.copytree(Path.cwd().joinpath("datasets"), targetPath)
     shutil.rmtree(Path.cwd().joinpath("datasets"))
     print(f"Finished downloading for {symbol}.")

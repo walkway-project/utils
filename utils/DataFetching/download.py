@@ -3,7 +3,7 @@ from catalyst.utils.utils.DataFetching.helpers.parser import process_download
 from catalyst.utils.utils.DataFetching.metadata.metadata import MetadataGenerator
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 from catalyst.utils.utils.DataFetching.markets import Market
-from catalyst.constants import DEFAULTPATH
+from catalyst.constants import DEFAULTPATH, MARKET_MAP
 
 import os
 from pathlib import Path
@@ -35,7 +35,7 @@ def download_symbols(symbols:list[str],timeframe:TimeFrame, market:Market):
         print("Performing fresh download of requested symbols.")
         for symbol in symbols:
             downloaded_path = download(symbol, catalystBase, timeframe, market)
-            process_download(downloaded_path, catalystBase)
+            process_download(downloaded_path, catalystBase.joinpath(MARKET_MAP[market]))
             metadataGenerator.on_download(symbol=symbol, market=market, timeframe=timeframe)
         metadataGenerator.store_metadata(catalystBase)
 
