@@ -100,7 +100,7 @@ class MetadataGenerator:
 
         static_metadata[self.VERSION_KEY] = METADATA_VERSION
         with open(self.path, "a") as jsonfile:
-            jsonfile.write(json.dumps(static_metadata).decode("utf-8"))
+            jsonfile.write(json.dumps(static_metadata, option=json.OPT_INDENT_2).decode("utf-8"))
 
     def delete_metadata(self, path = ""):
         """
