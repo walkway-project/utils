@@ -4,7 +4,6 @@ import shutil
 from itertools import repeat
 
 import concurrent.futures as cf
-import multiprocessing
 
 def extract_string(input_string):
     ftype = "snapshots"
@@ -98,14 +97,14 @@ def parse_trades(source, tradesFile, stop_at=None):
             f"{content['product_id']}|{content['side']}|{content['time']}|{content['price']}|{content['size']}|{content['trade_id']}\n"
         )
 
-def parse_file(f, base, pair_dir):
-    ftype, time, pair = extract_string(f)
-    feature_target = str(base/ftype_features[ftype])
+def parse_file(f, base_target):
+    ftype, time, symbol = extract_string(str(f))
+    feature_target = base_target.joinpath(ftype_features[ftype])
     os.makedirs(feature_target, exist_ok=True)
-    target_dir = str(base / ftype_features[ftype] / pair) #this is where it is going:
+    target_dir = feature_target.joinpath(symbol)
     os.makedirs(target_dir, exist_ok=True)
-    targetfile = target_dir + "/" + time + ".csv"
-    with gzip.open(pair_dir + "/" + f, "r") as f_in:
+    targetfile = target_dir.joinpath(f"{time}.csv")
+    with gzip.open(f) as f_in:
         with open(targetfile, "w+") as f_out:
             try:
                 if ftype == "updates":
@@ -115,22 +114,17 @@ def parse_file(f, base, pair_dir):
                 else:
                     parse_snapshots(f_in, f_out, stop_at=None)
             except Exception as e:
-                print(f"Error parsing {pair_dir}/{f}")
                 print(e)
 
 
 
-def process_download(symbol, catalystBase):
-    base = catalystBase
-    directories = [symbol]
-    #TODO: premake all the folders and files lol
-    directories = [str(base / entry) for entry in directories]
-    for pair_dir in directories:
-        files = os.listdir(pair_dir)
-        files = sorted([f for f in files if f.endswith(".gz")])
-        print("Launching Parsing Process Pool.")
-        with cf.ProcessPoolExecutor() as executor:
-            results = executor.map(parse_file, files, repeat(base), repeat(pair_dir))
-        # cf.wait(results)
-        shutil.rmtree(pair_dir)
+def process_download(symbol, downloaded_path):
+    files = [item.resolve() for item in downloaded_path.iterdir()]
+    domain_target = downloaded_path.parent
+    files = sorted([f for f in files if str(f).endswith(".gz")])
+    print("Launching Parsing Process Pool.")
+    with cf.ProcessPoolExecutor() as executor:
+        results = executor.map(parse_file, files, repeat(domain_target))
+    # cf.wait(results)
+    shutil.rmtree(downloaded_path)
     return

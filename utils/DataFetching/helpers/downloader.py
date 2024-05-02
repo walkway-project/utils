@@ -1,6 +1,7 @@
-from catalyst.constants import _DOWNLOAD_TIMEFRAME_MAP, MARKET_MAP
+from catalyst.constants import _DOWNLOAD_TIMEFRAME_MAP, DOMAIN_MAP, MARKET_MAP
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 from catalyst.utils.utils.DataFetching.markets import Market
+from catalyst.grail.grail.domains.domain_enum import DomainType
 from catalyst.secrets import DATAKEYS
 
 from pathlib import Path
@@ -10,7 +11,7 @@ import nest_asyncio
 from tardis_dev import datasets
 
 
-def download(symbol:str, catalystBase:Path, timeFrame:TimeFrame, market:Market):
+def download(symbol:str, catalystBase:Path, timeFrame:TimeFrame, market:Market, domain:DomainType=DomainType.TIME_1S):
     start, end = _DOWNLOAD_TIMEFRAME_MAP[timeFrame]
     nest_asyncio.apply()
     SYMBOL = symbol
@@ -27,7 +28,7 @@ def download(symbol:str, catalystBase:Path, timeFrame:TimeFrame, market:Market):
         concurrency=5,
         api_key=DATAKEYS[market],
     )
-    targetPath = catalystBase.joinpath(MARKET_MAP[market]).joinpath(SYMBOL)
+    targetPath = catalystBase.joinpath(MARKET_MAP[market], DOMAIN_MAP[domain], SYMBOL)
     shutil.copytree(Path.cwd().joinpath("datasets"), targetPath)
     shutil.rmtree(Path.cwd().joinpath("datasets"))
     print(f"Finished downloading for {symbol}.")
