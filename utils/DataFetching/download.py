@@ -40,7 +40,7 @@ def download_symbols(symbols:list[str], timeframe:TimeFrame, market:Market, doma
             downloaded_path = download(symbol, catalystBase, timeframe, market)
             process_download(symbol, downloaded_path)
             metadataGenerator.on_download(symbol=symbol, market=market, timeframe=timeframe)
-        metadataGenerator.store_metadata(catalystBase)
+    metadataGenerator.store_metadata(catalystBase)
 
 if __name__ == "__main__":
     tickers = ["SOLUSDT", "XRPUSDT", "DOGEUSDT", "BTCUSDT", "ETHUSDT", "ADAUSDT"]

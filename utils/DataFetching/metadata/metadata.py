@@ -36,7 +36,7 @@ class MetadataGenerator:
             self.metadata[market_str] = {}
             self.metadata[market_str][self.SYMBOL_KEY] = []
         self.metadata[market_str][self.SYMBOL_KEY].append(symbol)
-        self.metadata[self.TIMEFRAME_KEY] = timeframe
+        self.metadata[self.TIMEFRAME_KEY] = timeframe.value
         self.metadata[market_str][self.FEATURE_KEY] = self.default_features
 
     def on_dispatch(self, features:set, market:Market):
@@ -54,6 +54,11 @@ class MetadataGenerator:
         """
         result = []
         market_str = MARKET_MAP[market]
+        if market_str not in self.metadata:
+            self.metadata[market_str] = {}
+            self.metadata[market_str][self.SYMBOL_KEY] = []
+            return symbols
+            
         for symbol in symbols:
             if symbol not in self.metadata[market_str][self.SYMBOL_KEY]:
                 result.append(symbol)
@@ -94,12 +99,13 @@ class MetadataGenerator:
         """
         self.path = path.joinpath("metadata.json")
         static_metadata = copy.deepcopy(self.metadata)
+        static_metadata[self.VERSION_KEY] = METADATA_VERSION
         for key in static_metadata:
             if isinstance(static_metadata[key], dict):
                 static_metadata[key][self.SYMBOL_KEY] = list(static_metadata[key][self.SYMBOL_KEY])
 
-        static_metadata[self.VERSION_KEY] = METADATA_VERSION
-        with open(self.path, "a") as jsonfile:
+        with open(self.path, "w") as jsonfile:
+            jsonfile.truncate(0) #clear file if not clear
             jsonfile.write(json.dumps(static_metadata, option=json.OPT_INDENT_2).decode("utf-8"))
 
     def delete_metadata(self, path = ""):
@@ -118,7 +124,7 @@ class MetadataGenerator:
         """
         Deletes and regenerates the metadata in the given path + "metadata.json".
         """
-        self.delete_metadata(path.joinpath("metadata.json"))
+        self.delete_metadata(path)
         self.store_metadata(path)
         print("Metadata has been updated.")
 
