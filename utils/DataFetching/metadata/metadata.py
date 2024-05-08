@@ -7,8 +7,8 @@ import orjson as json
 import copy
 import os
 
-class MetadataGenerator:
 
+class MetadataGenerator:
     def __init__(self):
         self.metadata = {} #schema: {market : {data_dict}}
         self.features = {} # schema: {market: list(features)}
@@ -52,6 +52,7 @@ class MetadataGenerator:
         """
         Helper function for determining which symbols have not yet been computed. Must read metadata beforehand.
         """
+
         result = []
         market_str = MARKET_MAP[market]
         if market_str not in self.metadata:
@@ -91,13 +92,13 @@ class MetadataGenerator:
             raise Exception("Metadata is out of date - Please regenerate your Data Warehouse!")
         self.metadata = mdDict
         return mdDict
-
-
+      
     def store_metadata(self, path):
         """
         Stores the current metadata into the path/metadata.json.
         """
         self.path = path.joinpath("metadata.json")
+
         static_metadata = copy.deepcopy(self.metadata)
         static_metadata[self.VERSION_KEY] = METADATA_VERSION
         for key in static_metadata:
@@ -108,7 +109,7 @@ class MetadataGenerator:
             jsonfile.truncate(0) #clear file if not clear
             jsonfile.write(json.dumps(static_metadata, option=json.OPT_INDENT_2).decode("utf-8"))
 
-    def delete_metadata(self, path = ""):
+    def delete_metadata(self, path=""):
         """
         Deletes the metadata in the current path, defaults to the cached path. Not intended to be used by end users.
         """
@@ -116,7 +117,7 @@ class MetadataGenerator:
             raise Exception("No path stored or found for deletion")
         elif self.path: 
             os.remove(self.path.joinpath("metadata.json"))
-        else: #does not point at md
+        else:  # does not point at md
             path = path.joinpath("metadata.json")
             os.remove(path)
 
@@ -124,7 +125,7 @@ class MetadataGenerator:
         """
         Deletes and regenerates the metadata in the given path + "metadata.json".
         """
+
         self.delete_metadata(path)
         self.store_metadata(path)
         print("Metadata has been updated.")
-

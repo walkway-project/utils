@@ -5,6 +5,7 @@ from itertools import repeat
 
 import concurrent.futures as cf
 
+
 def extract_string(input_string):
     ftype = "snapshots"
     if "trades" in input_string:
@@ -17,11 +18,13 @@ def extract_string(input_string):
     substring = substring[-1]
     return ftype, time, substring
 
+
 ftype_features = {
-    "snapshots" : "ob_snapshot_50",
-    "trades" : "trades",
-    "updates" : "l2_updates" 
+    "snapshots": "ob_snapshot_50",
+    "trades": "trades",
+    "updates": "l2_updates",
 }
+
 
 def parse_updates(source, updatesFile, stop_at=None):
     i = 0
@@ -40,7 +43,7 @@ def parse_updates(source, updatesFile, stop_at=None):
             "time": contents[2],
             "price": contents[6],
             "size": contents[7],
-            "is_snapshot":contents[4],
+            "is_snapshot": contents[4],
         }
         updatesFile.write(
             f"{content['product_id']}|{content['side']}|{content['time']}|{content['price']}|{content['size']}|{content['is_snapshot']}\n"
@@ -115,8 +118,6 @@ def parse_file(f, base_target):
                     parse_snapshots(f_in, f_out, stop_at=None)
             except Exception as e:
                 print(e)
-
-
 
 def process_download(symbol, downloaded_path):
     files = [item.resolve() for item in downloaded_path.iterdir()]

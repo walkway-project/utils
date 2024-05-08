@@ -1,5 +1,5 @@
-from catalyst.utils.utils.DataFetching.helpers.downloader import download 
-from catalyst.utils.utils.DataFetching.helpers.parser import process_download 
+from catalyst.utils.utils.DataFetching.helpers.downloader import download
+from catalyst.utils.utils.DataFetching.helpers.parser import process_download
 from catalyst.utils.utils.DataFetching.metadata.metadata import MetadataGenerator
 from catalyst.utils.utils.DataFetching.metadata.mdtimeframe import TimeFrame
 from catalyst.utils.utils.DataFetching.markets import Market
@@ -9,7 +9,10 @@ from catalyst.constants import DEFAULTPATH, MARKET_MAP, DOMAIN_MAP
 import os
 from pathlib import Path
 
-class PathWarning(UserWarning): pass
+
+class PathWarning(UserWarning):
+    pass
+
 
 metadataGenerator = MetadataGenerator()
 
