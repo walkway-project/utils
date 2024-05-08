@@ -45,7 +45,7 @@ class MetadataGenerator:
         and to overwrite the metadata afterwards.
         """
         market_str = MARKET_MAP[market]
-        self.metadata[market_str][self.FEATURE_KEY] = list(set(self.metadata[self.FEATURE_KEY]).union(features))
+        self.metadata[market_str][self.FEATURE_KEY] = list(set(self.metadata[market_str][self.FEATURE_KEY]).union(features))
         self.features = self.metadata[market_str][self.FEATURE_KEY]
 
     def find_uncached_symbols(self, symbols:list[str], market:Market):
