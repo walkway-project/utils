@@ -10,3 +10,4 @@ class TimeFrame(Enum):
     LONG = 3  # 1/1/2017 to 7/1/2023
     NEW = 4 # 2/1/2024 to 6/1/2024
     CURRENT = 5 # 1/2/2024 to 5/10/2024
+    CURRENT_LONG = 6 # 9/1/2023 to 5/10/2024

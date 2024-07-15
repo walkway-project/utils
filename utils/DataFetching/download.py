@@ -46,6 +46,6 @@ def download_symbols(symbols:list[str], timeframe:TimeFrame, market:Market, doma
     metadataGenerator.store_metadata(catalystBase)
 
 if __name__ == "__main__":
-    tickers = ["XRPUSDT", "BTCUSDT", "ETHUSDT"]
+    tickers = ["XRPUSDT", "BTCUSDT"]
     market = Market.BINANCE_USDT_FUTURES
-    download_symbols(tickers, TimeFrame.CURRENT, market)
+    download_symbols(tickers, TimeFrame.CURRENT_LONG, market)
